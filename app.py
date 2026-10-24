@@ -61,30 +61,25 @@ career_analysis_schema = {
             },
             "description": "Topics the student should prepare for interviews"
         }
-    }
+    },
+    "required": [
+        "profile_summary",
+        "strengths",
+        "skill_gaps",
+        "priority_skills",
+        "interview_topics",
+    ]
 }
 
 
-student_name = input("Student name: ")
-education = input("Education: ")
-skills = input("Your current technical skills (comma separated) : ")
-projects = input("Projects (Comma separated) : ")
-experience = input("Experience / Internship if any : ")
-target_role = input("Target Job Role: ")
+# student_name = input("Student name: ")
+# education = input("Education: ")
+# skills = input("Your current technical skills (comma separated) : ")
+# projects = input("Projects (Comma separated) : ")
+# experience = input("Experience / Internship if any : ")
+# target_role = input("Target Job Role: ")
 
-user_input = input("Enter your query: ")
-
-# Context Engineering
-student_context = f"""
-STUDENT PROFILE
-
-Name: {student_name}
-Education: {education}
-Technical Skills: {skills}
-Projects: {projects}
-Experience/Internship: {experience}
-Target Job Role: {target_role}
-"""
+# user_input = input("Enter your query: ")
 
 def analyze_career(student_context):
     # Prompt Engineering
@@ -153,10 +148,6 @@ def analyze_career(student_context):
     1. <recommendation>
     2. <recommendation>
     3. <recommendation>
-
-
-    STUDENT QUESTION:
-    {user_input}
     """
 
     # Send our request to Gemini.
@@ -170,7 +161,7 @@ def analyze_career(student_context):
             "schema": career_analysis_schema
         }
     )
-
+    print(json.loads(response.output_text))
     return json.loads(response.output_text)
 
 
@@ -239,18 +230,18 @@ def analyze_resume_job(resume_text, job_description):
     return json.loads(response.output_text)    
 
 
-print("==== CAREERTWIN CAREER ANALYSIS ====")
-# print(response.output_text)
-career_analysis = analyze_career(student_context)
+# print("==== CAREERTWIN CAREER ANALYSIS ====")
+# # print(response.output_text)
+# career_analysis = analyze_career(student_context)
 
-print("PROFILE SUMMARY")
-print(career_analysis["profile_summary"])
+# print("PROFILE SUMMARY")
+# print(career_analysis["profile_summary"])
 
-# Collect resume and job description text
-resume_text = input("Paste resume text: ")
-job_description = input("Paste Job Description: ")
+# # Collect resume and job description text
+# resume_text = input("Paste resume text: ")
+# job_description = input("Paste Job Description: ")
 
-result = analyze_resume_job(resume_text, job_description)
+# result = analyze_resume_job(resume_text, job_description)
 
-print("SUMMARY")
-print(result["match_summary"])
+# print("SUMMARY")
+# print(result["match_summary"])
