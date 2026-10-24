@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from google import genai
+import json
 
 # Load environment variables from .env file
 # This allows us to keep sensitive configuration outside the Python source code
@@ -22,6 +23,47 @@ generation_config = {
     'max_output_tokens': 2000,
     'thinking_level': 'medium',
 }
+
+
+# Define the exact JSON sctructure that Gemini must return
+career_analysis_schema = {
+    "type": "object",
+    "properties": {
+        "profile_summary": {
+            "type": "string",
+            "description": "A concise summary of the student's current profile"
+        },
+        "strengths": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Technical or career strengths identified from profile"
+        },
+        "skill_gaps": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Skills missing or insufficient for the target role"
+        },
+        "priority_skills": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Skills that student should prioritize"
+        },
+        "interview_topics": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Topics the student should prepare for interviews"
+        }
+    }
+}
+
 
 student_name = input("Student name: ")
 education = input("Education: ")
@@ -121,6 +163,16 @@ response = client.interactions.create(
     model = gemini_model,
     input = career_prompt,
     generation_config=generation_config,
+    response_format={
+        "type": "text",
+        "mime_type": "application/json",
+        "schema": career_analysis_schema
+    }
 )
-print("==== GEMINI ====")
-print(response.output_text)
+
+print("==== CAREERTWIN CAREER ANALYSIS ====")
+# print(response.output_text)
+career_analysis = json.loads(response.output_text)
+
+print("PROFILE SUMMARY")
+print(career_analysis["profile_summary"])
